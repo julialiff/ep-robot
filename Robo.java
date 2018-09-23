@@ -24,10 +24,48 @@ public class Robo implements IRobo {
 	/** Construtor padrão para o robô **/
 	public Robo() {
 		// Aqui você deve inserir seu código
+		// Criar sala e mansageiro
+		Sala sala = new Sala();
+		System.out.println(sala.TAMANHO_SALA);
+
+		Mensageiro mensageiro = new Mensageiro();
 	}
 
 	// Aqui você deve completar seu código
 
+	public void buscaBlocos() {
+		int x = 0;
+		int y = 2;
+		while (true) {
+			buscaBloco(x, y);
+		}
+	}
+
+	public void novaBusca() {
+		System.out.println("oi");
+	}
+
+	public void adicionaBloco(int i, int j) {
+		sala.marcaPosicaoBusca(i, j, Sala.BLOCO_PRESENTE);
+	}
+
+	public void adicionaObstaculo(int i, int j) {
+		System.out.println("oi");
+	}
+
+	public boolean guardaBloco() {
+		System.out.println("oi");
+		return true;
+	}
+
+	public boolean buscaBloco(int x, int y){
+		int up = y + 1;
+		int right = x + 1;
+		int down = y - 1;
+		int left = x - 1;
+
+		return true;
+	}
 
 	/**
 		Retorna instância do mensageiro do robô

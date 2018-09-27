@@ -9,6 +9,8 @@ public class Sala implements ISala {
 
 	// aqui você deve inserir seu código
 
+  public int[][] matriz = new int[TAMANHO_SALA][TAMANHO_SALA];
+
   public void removeMarcador(int marcador) {
     System.out.println("oi");
   }
@@ -18,11 +20,12 @@ public class Sala implements ISala {
   }
 
   public boolean areaArmazenagem(int x, int y) {
-    if (x == X_INICIO_ARM || x == X_FIM_ARM && y == Y_INICIO_ARM || y == Y_FIM_ARM) {
-      return true;
-    } else {
-      return false;
+    if (x == X_INICIO_ARM || x == X_FIM_ARM) {
+      if (y == Y_INICIO_ARM || y == Y_FIM_ARM) {
+        return true;
+      }
     }
+    return false;
   }
 
   public boolean marcaPosicaoArmazenagem(int x, int y) {
@@ -34,13 +37,12 @@ public class Sala implements ISala {
     if (!posicaoBuscaValida(x, y) && areaArmazenagem(x, y)) {
       return false;
     }
-    sala[x][y] = marcador;
+    this.matriz[x][y] = marcador;
     return true;
   }
 
   public int marcadorEm(int x, int y) {
-    System.out.println("oi");
-    return 1;
+    return this.matriz[x][y];
   }
 
   public boolean posicaoBuscaValida(int x, int y) {

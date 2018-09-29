@@ -12,11 +12,19 @@ public class Sala implements ISala {
   public int[][] matriz = new int[TAMANHO_SALA][TAMANHO_SALA];
 
   public void removeMarcador(int marcador) {
-    System.out.println("oi");
+    for (int x = 0; x < TAMANHO_SALA; x++) {
+      for (int y = 0; y < TAMANHO_SALA; y++) {
+        if (posicaoBuscaValida(x, y) && !areaArmazenagem(x, y) && this.matriz[x][y] != OBSTACULO_PRESENTE) {
+          marcaPosicaoBusca(x, y, POSICAO_VAZIA);
+        }
+      }
+    }
   }
 
   public void removeMarcador(int x, int y) {
-    System.out.println("oi");
+    if (posicaoBuscaValida(x, y) && !areaArmazenagem(x, y) && this.matriz[x][y] != OBSTACULO_PRESENTE) {
+      marcaPosicaoBusca(x, y, POSICAO_VAZIA);
+    }
   }
 
   public boolean areaArmazenagem(int x, int y) {
@@ -29,8 +37,12 @@ public class Sala implements ISala {
   }
 
   public boolean marcaPosicaoArmazenagem(int x, int y) {
-    System.out.println("oi");
-    return true;
+    if (!areaArmazenagem(x, y) || marcadorEm(x, y) == BLOCO_PRESENTE) {
+      return false;
+    } else {
+      this.matriz[x][y] = BLOCO_PRESENTE;
+      return true;
+    }
   }
 
   public boolean marcaPosicaoBusca(int x, int y, int marcador) {

@@ -26,12 +26,8 @@ public class Robo implements IRobo {
   /** Construtor padrão para o robô **/
   public Robo() {
     // Aqui você deve inserir seu código
-
     sala = new Sala();
     mensageiro = new Mensageiro();
-    // sala[5][5] = sala.BLOCO_PRESENTE;
-    // System.out.println(sala[0][0]);
-
   }
 
   // Aqui você deve completar seu código
@@ -39,31 +35,17 @@ public class Robo implements IRobo {
   public void buscaBlocos() {
     int blocos = 0;
     for (int i = 0; i < 5; i++) {
-      System.out.println("Busca " + i);
-      System.out.println("Pré-busca");
-      imprimeSala();
       buscaBloco(x, y);
-
-      System.out.println("Pós-busca");
-      imprimeSala();
-
       novaBusca();
-      System.out.println("Pós-novaBusca");
-      imprimeSala();
-
       if (sala.matriz[1][1] == sala.BLOCO_PRESENTE) {
         mensageiro.msgFim();
         break;
       }
-    }
-  }
-
-  public void imprimeSala() {
-    for (int i = 0; i < 10; i++) {
-      for (int j = 0; j < 10; j++) {
-        System.out.print(sala.matriz[i][j] + "|");
+      if (achouBloco == false) {
+        mensageiro.msgNaoAchou();
+      } else {
+        achouBloco = false;
       }
-      System.out.println("");
     }
   }
 
@@ -93,12 +75,6 @@ public class Robo implements IRobo {
   }
 
   public boolean buscaBloco(int x, int y){
-    // System.out.println("x: " + x + " y: " + y);
-    // System.out.println("posicaoBuscaValida: " + sala.posicaoBuscaValida(x, y));
-    // System.out.println("areaArmazenagem: " + sala.areaArmazenagem(x, y));
-    // System.out.println("5x5: " + sala.matriz[5][5]);
-
-
     if (!sala.posicaoBuscaValida(x, y) || sala.areaArmazenagem(x, y)) {
       return false;
     }
@@ -106,7 +82,6 @@ public class Robo implements IRobo {
     if (sala.marcadorEm(x, y) == sala.BLOCO_PRESENTE) {
       mensageiro.mensagem(mensageiro.BUSCA, x, y);
       mensageiro.mensagem(mensageiro.CAPTURA, x, y);
-      // sala.removeMarcador(sala.MARCA_PRESENTE);
       sala.marcaPosicaoBusca(x, y, sala.POSICAO_VAZIA);
       achouBloco = true;
       return true;
@@ -123,15 +98,6 @@ public class Robo implements IRobo {
 
     sala.marcaPosicaoBusca(x, y, sala.MARCA_PRESENTE);
     mensageiro.mensagem(mensageiro.BUSCA, x, y);
-    int up = y++;
-    int right = x++;
-    int down = y--;
-    int left = x--;
-
-    if (x ==9 && y ==9) {
-      System.out.println("X: " + x + " down: " + down + " y: " + y);
-    }
-
 
     if (!achouBloco) buscaBloco(x, (y + 1)); // cima
     if (!achouBloco) buscaBloco((x + 1), y); // direita
@@ -140,7 +106,6 @@ public class Robo implements IRobo {
     mensageiro.mensagem(mensageiro.RETORNO, x, y);
     if (achouBloco && x == 0 && y == 2) {
       guardaBloco();
-      achouBloco = false;
     }
     return false;
 

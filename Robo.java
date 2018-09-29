@@ -21,6 +21,7 @@ public class Robo implements IRobo {
   /** Mensageiro do robô **/
   public Mensageiro mensageiro;
   public Sala sala;
+  public boolean achouBloco;
 
   /** Construtor padrão para o robô **/
   public Robo() {
@@ -37,17 +38,37 @@ public class Robo implements IRobo {
 
   public void buscaBlocos() {
     int blocos = 0;
-    // while (true) {
-      boolean achouBloco = buscaBloco(x, y);
-      if (achouBloco) {
-        blocos++;
-      // }
-      // if (blocos == 4) break;
+    for (int i = 0; i < 5; i++) {
+      System.out.println("Busca " + i);
+      System.out.println("Pré-busca");
+      imprimeSala();
+      buscaBloco(x, y);
+
+      System.out.println("Pós-busca");
+      imprimeSala();
+
+      novaBusca();
+      System.out.println("Pós-novaBusca");
+      imprimeSala();
+
+      if (sala.matriz[1][1] == sala.BLOCO_PRESENTE) {
+        mensageiro.msgFim();
+        break;
+      }
+    }
+  }
+
+  public void imprimeSala() {
+    for (int i = 0; i < 10; i++) {
+      for (int j = 0; j < 10; j++) {
+        System.out.print(sala.matriz[i][j] + "|");
+      }
+      System.out.println("");
     }
   }
 
   public void novaBusca() {
-    System.out.println("oi");
+    sala.removeMarcador(sala.MARCA_PRESENTE);
   }
 
   public void adicionaBloco(int x, int y) {
@@ -59,22 +80,35 @@ public class Robo implements IRobo {
   }
 
   public boolean guardaBloco() {
-    System.out.println("oi");
-    return true;
+    for (int i = 0; i <= 1; i++) {
+      for (int j = 0; j <=1; j++) {
+        boolean guarda = sala.marcaPosicaoArmazenagem(j, i);
+        if (guarda == true) {
+          mensageiro.mensagem(mensageiro.ARMAZENAGEM, j, i);
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   public boolean buscaBloco(int x, int y){
-    if (x >= 10 || y >= 10) {
-      return false;
-    }
-    if (!sala.posicaoBuscaValida(x, y) && sala.areaArmazenagem(x, y)) {
+    // System.out.println("x: " + x + " y: " + y);
+    // System.out.println("posicaoBuscaValida: " + sala.posicaoBuscaValida(x, y));
+    // System.out.println("areaArmazenagem: " + sala.areaArmazenagem(x, y));
+    // System.out.println("5x5: " + sala.matriz[5][5]);
+
+
+    if (!sala.posicaoBuscaValida(x, y) || sala.areaArmazenagem(x, y)) {
       return false;
     }
 
     if (sala.marcadorEm(x, y) == sala.BLOCO_PRESENTE) {
       mensageiro.mensagem(mensageiro.BUSCA, x, y);
       mensageiro.mensagem(mensageiro.CAPTURA, x, y);
+      // sala.removeMarcador(sala.MARCA_PRESENTE);
       sala.marcaPosicaoBusca(x, y, sala.POSICAO_VAZIA);
+      achouBloco = true;
       return true;
     }
 
@@ -89,84 +123,27 @@ public class Robo implements IRobo {
 
     sala.marcaPosicaoBusca(x, y, sala.MARCA_PRESENTE);
     mensageiro.mensagem(mensageiro.BUSCA, x, y);
-    buscaBloco(x, ++y); // cima
-    buscaBloco(++x, y); // direita
-    buscaBloco(x, --y); // baixo
-    buscaBloco(--x, y); // esquerda
+    int up = y++;
+    int right = x++;
+    int down = y--;
+    int left = x--;
+
+    if (x ==9 && y ==9) {
+      System.out.println("X: " + x + " down: " + down + " y: " + y);
+    }
+
+
+    if (!achouBloco) buscaBloco(x, (y + 1)); // cima
+    if (!achouBloco) buscaBloco((x + 1), y); // direita
+    if (!achouBloco) buscaBloco(x, (y - 1)); // baixo
+    if (!achouBloco) buscaBloco((x - 1), y); // esquerda
     mensageiro.mensagem(mensageiro.RETORNO, x, y);
+    if (achouBloco && x == 0 && y == 2) {
+      guardaBloco();
+      achouBloco = false;
+    }
     return false;
-    // if (sala.marcadorEm(x, y) == sala.POSICAO_VAZIA) {
-    //     System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-  //       mensageiro.mensagem(mensageiro.CAPTURA, x, y);
-  //       marcaPosicaoBusca(x, y, sala.MARCA_PRESENTE)
-  //       return true;
-  //   } else {
-    //   mensageiro.mensagem(mensageiro.BUSCA, x, y);
-    //   marcaPosicaoBusca(x, y, sala.MARCA_PRESENTE)
-  //   }
-    // System.out.println("posicao " + x + "x" + y);
-    // System.out.println("buscaBloco");
-    // int up = y + 1;
-    // int right = x + 1;
-    // int down = y - 1;
-    // int left = x - 1;
 
-    // // System.out.println(x);
-    // // System.out.println(up);
-    // // System.out.println(sala.posicaoBuscaValida(x, up));
-    // // System.out.println((sala.areaArmazenagem(x, up)) + "\n\n");
-
-
-    // boolean armazenagem = sala.areaArmazenagem(x, up);
-
-
-    // if (sala.posicaoBuscaValida(x, up) & !armazenagem) {
-    //   if (sala.marcadorEm(x, up) == sala.OBSTACULO_PRESENTE) {
-    //     // System.out.println("posicao " + x + "x" + up);
-    //     mensageiro.mensagem(mensageiro.OBSTACULO, x, up);
-    //   } else {
-    //     // System.out.println("sem obstáculo lek!");
-    //     y = up;
-    //     buscaBloco(x, y);
-    //   }
-    // }
-
-    // if (sala.posicaoBuscaValida(right, y) & !armazenagem) {
-    //   if (sala.marcadorEm(right, y) == sala.OBSTACULO_PRESENTE) {
-    //     // System.out.println("posicao " + x + "x" + right);
-    //     mensageiro.mensagem(mensageiro.OBSTACULO, right, y);
-    //   } else {
-    //     x = right;
-    //     buscaBloco(x, y);
-    //   }
-    // }
-
-    // if (sala.posicaoBuscaValida(x, down) & !armazenagem) {
-    //   if (sala.marcadorEm(x, y) == sala.OBSTACULO_PRESENTE) {
-    //     // System.out.println("posicao " + x + "x" + down);
-    //     mensageiro.mensagem(mensageiro.OBSTACULO, x, down);
-    //   } else {
-    //     y = down;
-    //     buscaBloco(x, y);
-    //   }
-    // }
-
-    // if (sala.posicaoBuscaValida(left, y) & !armazenagem) {
-    //   if (sala.marcadorEm(x, y) == sala.OBSTACULO_PRESENTE) {
-    //     // System.out.println("posicao " + x + "x" + left);
-    //     mensageiro.mensagem(mensageiro.OBSTACULO, left, y);
-    //   } else {
-    //     x = left;
-    //     buscaBloco(x, y);
-
-    //   }
-    // }
-
-
-      // System.out.println("sem obstáculo lek!");
-
-
-    // return true;
   }
 
   /**

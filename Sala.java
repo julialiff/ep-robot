@@ -14,7 +14,7 @@ public class Sala implements ISala {
   public void removeMarcador(int marcador) {
     for (int x = 0; x < TAMANHO_SALA; x++) {
       for (int y = 0; y < TAMANHO_SALA; y++) {
-        if (posicaoBuscaValida(x, y) && !areaArmazenagem(x, y) && this.matriz[x][y] != OBSTACULO_PRESENTE) {
+        if (posicaoBuscaValida(x, y) && !areaArmazenagem(x, y) && this.matriz[x][y] == marcador) {
           marcaPosicaoBusca(x, y, POSICAO_VAZIA);
         }
       }
@@ -22,7 +22,7 @@ public class Sala implements ISala {
   }
 
   public void removeMarcador(int x, int y) {
-    if (posicaoBuscaValida(x, y) && !areaArmazenagem(x, y) && this.matriz[x][y] != OBSTACULO_PRESENTE) {
+    if (posicaoBuscaValida(x, y) && !areaArmazenagem(x, y) && this.matriz[x][y] != OBSTACULO_PRESENTE && this.matriz[x][y] != BLOCO_PRESENTE) {
       marcaPosicaoBusca(x, y, POSICAO_VAZIA);
     }
   }
